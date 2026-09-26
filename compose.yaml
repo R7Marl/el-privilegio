@@ -4,15 +4,13 @@ services:
     container_name: el-privilegio-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: el_privilegio
-      POSTGRES_USER: el_privilegio
-      POSTGRES_PASSWORD: "Lukaelcapo123*"
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: ${POSTGRES_DB:?Define POSTGRES_DB in .env}
+      POSTGRES_USER: ${POSTGRES_USER:?Define POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD in .env}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U el_privilegio -d el_privilegio"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 5s
       retries: 12
@@ -28,10 +26,12 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      DATABASE_URL: "postgresql://el_privilegio:Lukaelcapo123%2A@postgres:5432/el_privilegio"
-      ADMIN_EMAIL: admin@elprivilegio.local
-      ADMIN_PASSWORD: demo1234
-      ADMIN_SESSION_SECRET: el-privilegio-local-development-secret-change-before-production
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?Define ADMIN_EMAIL in .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Define ADMIN_PASSWORD in .env}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?Define ADMIN_SESSION_SECRET in .env}
+      # Docker local se abre por HTTP. En un dominio público con HTTPS, usa true.
+      ADMIN_COOKIE_SECURE: ${ADMIN_COOKIE_SECURE:-false}
     ports:
       - "3000:3000"
 

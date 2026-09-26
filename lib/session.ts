@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 
 const COOKIE_NAME = 'el_privilegio_admin';
 const MAX_AGE = 60 * 60 * 8;
+const cookieSecure = process.env.ADMIN_COOKIE_SECURE !== 'false';
 
 function secret() {
   const value = process.env.ADMIN_SESSION_SECRET;
@@ -28,7 +29,7 @@ export async function getAdminSession() {
 }
 
 export function sessionCookie(token: string) {
-  return { name: COOKIE_NAME, value: token, options: { httpOnly: true, sameSite: 'lax' as const, secure: process.env.NODE_ENV === 'production', path: '/', maxAge: MAX_AGE } };
+  return { name: COOKIE_NAME, value: token, options: { httpOnly: true, sameSite: 'lax' as const, secure: cookieSecure, path: '/', maxAge: MAX_AGE } };
 }
 
-export const expiredSessionCookie = { name: COOKIE_NAME, value: '', options: { httpOnly: true, sameSite: 'lax' as const, secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 0 } };
+export const expiredSessionCookie = { name: COOKIE_NAME, value: '', options: { httpOnly: true, sameSite: 'lax' as const, secure: cookieSecure, path: '/', maxAge: 0 } };
