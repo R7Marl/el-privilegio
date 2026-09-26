@@ -1,74 +1,18 @@
-/**
- * Configuración central del cotizador.
- *
- * Todos los importes están expresados en pesos argentinos (ARS).
- * Para actualizar la cotización, modifica solamente los valores `pricePerGuest`
- * y `price` de este archivo. No hace falta tocar la lógica de la página.
- */
+/** Valores iniciales del catálogo. La base de datos los carga al iniciar Docker. */
+export type ServiceDetail = { heading: string; items: string[] };
+export type EventStyle = { id: string; title: string; duration: string; description: string; pricePerGuest: number; includes: string[]; details: ServiceDetail[]; proposalPdf: string };
+export type ExtraPricing = 'por persona' | 'por evento' | 'por mesa' | 'por 8 niños';
+export type Extra = { id: string; title: string; description: string; price: number; pricing: ExtraPricing };
 
-export type EventStyle = {
-  id: string;
-  title: string;
-  duration: string;
-  description: string;
-  pricePerGuest: number;
-  includes: string[];
-};
-
-export type Extra = {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  pricing: 'por persona' | 'por evento';
-};
-
+const beverages = 'Bebidas sin alcohol: agua, gaseosas, jugos, café y té.';
 export const eventStyles: EventStyle[] = [
-  {
-    id: 'formal',
-    title: 'Celebración formal',
-    duration: '8 horas',
-    description: 'Servicio completo para cenas, aniversarios y celebraciones formales.',
-    pricePerGuest: 98000,
-    includes: ['Planificación y coordinación', 'Catering personalizado', 'Ambientación base'],
-  },
-  {
-    id: 'informal',
-    title: 'Celebración informal',
-    duration: '5 horas',
-    description: 'Formato ágil para reuniones sociales y encuentros de día.',
-    pricePerGuest: 72000,
-    includes: ['Planificación y coordinación', 'Catering personalizado', 'Música y ambientación base'],
-  },
-  {
-    id: 'casamiento',
-    title: 'Casamiento',
-    duration: '8 horas',
-    description: 'Planificación y producción para una celebración de boda.',
-    pricePerGuest: 125000,
-    includes: ['Asesoramiento personalizado', 'Coordinación del evento', 'Ambientación base'],
-  },
-  {
-    id: 'corporativo',
-    title: 'Evento corporativo',
-    duration: 'A medida',
-    description: 'Producción para reuniones, lanzamientos y actividades de empresa.',
-    pricePerGuest: 85000,
-    includes: ['Coordinación', 'Espacios y montaje', 'Propuesta a medida'],
-  },
+  { id: 'bronce', title: 'Servicio de Bronce', duration: '8 horas', pricePerGuest: 99000, description: 'Recepción, estación elegida, plato principal y mesa dulce.', includes: ['Recepción fría y caliente', 'Una estación a elección', 'Plato principal y postre', 'Bebidas sin alcohol incluidas'], details: [{ heading: 'Recepción', items: ['Canapés fríos, sandwiches especiales y bocados calientes.', 'Empanadas, pizzetas, brochettes y opciones de finger food.'] }, { heading: 'Estación a elección', items: ['Mexicana, perniles o pastas.'] }, { heading: 'Menú', items: ['Tabla de quesos y fiambres.', 'Cazuelas a elección, postre y mesa dulce.'] }, { heading: 'Bebidas', items: [beverages] }], proposalPdf: '/propuestas/servicio-bronce.pdf' },
+  { id: 'plata', title: 'Servicio de Plata', duration: '8 horas', pricePerGuest: 120000, description: 'Recepción, dos estaciones, plato principal y mesa dulce.', includes: ['Recepción fría y caliente', 'Dos estaciones a elección', 'Plato principal y postre', 'Bebidas sin alcohol incluidas'], details: [{ heading: 'Recepción', items: ['Canapés fríos, sandwiches especiales y bocados calientes.', 'Empanadas, pizzetas, brochettes y opciones de finger food.'] }, { heading: 'Estaciones', items: ['Dos opciones a elección: mexicana, perniles o pastas.', 'Tabla de quesos y fiambres.'] }, { heading: 'Menú', items: ['Plato principal a elección, opción infantil, postre y mesa dulce.'] }, { heading: 'Bebidas', items: [beverages] }], proposalPdf: '/propuestas/servicio-plata.pdf' },
+  { id: 'asado-party', title: 'Servicio Asado Party', duration: '8 horas', pricePerGuest: 120000, description: 'Recepción, estaciones, asado completo, postre y mesa dulce.', includes: ['Recepción fría y caliente', 'Estaciones y tabla de fiambres', 'Asado completo con guarniciones', 'Bebidas sin alcohol incluidas'], details: [{ heading: 'Recepción y estaciones', items: ['Canapés, bocados calientes y variedad de finger food.', 'Pernil y tabla de quesos y fiambres.'] }, { heading: 'Asado', items: ['Chorizo, morcilla, costilla, vacío y matambre.', 'Ensaladas y guarniciones.'] }, { heading: 'Cierre', items: ['Postre a elección y mesa dulce.', beverages] }], proposalPdf: '/propuestas/asado-party.pdf' },
+  { id: 'pizza-party', title: 'Servicio Pizza Party', duration: '8 horas', pricePerGuest: 85000, description: 'Recepción, estaciones, pizzas variadas, postre y mesa dulce.', includes: ['Recepción fría y caliente', 'Estaciones y tabla de fiambres', 'Pizzas variadas', 'Bebidas sin alcohol incluidas'], details: [{ heading: 'Recepción y estaciones', items: ['Canapés, bocados calientes y variedad de finger food.', 'Pernil y tabla de quesos y fiambres.'] }, { heading: 'Pizza party', items: ['Pizzas de muzzarella, napolitana, jamón y morrones, huevo y champiñones.'] }, { heading: 'Cierre', items: ['Postre a elección y mesa dulce.', beverages] }], proposalPdf: '/propuestas/pizza-party.pdf' },
 ];
 
 export const extras: Extra[] = [
-  { id: 'bar', title: 'Barra de tragos', description: 'Coctelería y servicio durante el evento.', price: 18000, pricing: 'por persona' },
-  { id: 'photo', title: 'Fotografía y video', description: 'Cobertura fotográfica y audiovisual.', price: 350000, pricing: 'por evento' },
-  { id: 'flowers', title: 'Ambientación floral', description: 'Diseño floral para mesas y espacios principales.', price: 480000, pricing: 'por evento' },
-  { id: 'show', title: 'Show o DJ', description: 'Música y operación técnica durante el evento.', price: 420000, pricing: 'por evento' },
-  { id: 'ceremony', title: 'Ceremonia', description: 'Montaje y producción para la ceremonia.', price: 280000, pricing: 'por evento' },
-  { id: 'kids', title: 'Rincón infantil', description: 'Espacio y actividades para invitados menores.', price: 12000, pricing: 'por persona' },
+  { id: 'licuados', title: 'Barra de licuados', description: 'Barra de licuados durante el evento.', price: 15000, pricing: 'por persona' }, { id: 'alcoholica', title: 'Barra alcohólica', description: 'Servicio de bebidas alcohólicas.', price: 20000, pricing: 'por persona' }, { id: 'tragos', title: 'Barra de tragos', description: 'Coctelería y servicio de barra.', price: 18000, pricing: 'por evento' }, { id: 'iluminacion', title: 'Iluminación', description: 'Iluminación para el espacio del evento.', price: 300000, pricing: 'por evento' }, { id: 'fin-fiesta', title: 'Fin de fiesta', description: 'Servicio para el cierre de la celebración.', price: 14000, pricing: 'por persona' }, { id: 'manteles-fundas', title: 'Manteles y fundas de silla', description: 'Se calcula una mesa cada 8 personas.', price: 15000, pricing: 'por mesa' }, { id: 'centros-mesa', title: 'Centros de mesa', description: 'Valor inicial. Se calcula una mesa cada 8 personas.', price: 9000, pricing: 'por mesa' }, { id: 'cabina-fotos', title: 'Cabina de fotos', description: 'Incluye fotos durante el evento.', price: 250000, pricing: 'por evento' }, { id: 'fotografo', title: 'Fotógrafo', description: 'Valor inicial según el servicio elegido.', price: 500000, pricing: 'por evento' }, { id: 'kids', title: 'Servicio kids', description: 'Se calcula cada grupo de hasta 8 niños.', price: 200000, pricing: 'por 8 niños' }, { id: 'carpas', title: 'Carpas y gazebos', description: 'Valor inicial según el armado requerido.', price: 100000, pricing: 'por evento' },
 ];
-
-export const currency = new Intl.NumberFormat('es-AR', {
-  style: 'currency',
-  currency: 'ARS',
-  maximumFractionDigits: 0,
-});
+export const currency = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });

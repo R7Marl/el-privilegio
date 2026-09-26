@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: el-privilegio-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: el_privilegio
+      POSTGRES_USER: el_privilegio
+      POSTGRES_PASSWORD: "Lukaelcapo123*"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U el_privilegio -d el_privilegio"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: el-privilegio-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://el_privilegio:Lukaelcapo123%2A@postgres:5432/el_privilegio"
+      ADMIN_EMAIL: admin@elprivilegio.local
+      ADMIN_PASSWORD: demo1234
+      ADMIN_SESSION_SECRET: el-privilegio-local-development-secret-change-before-production
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
