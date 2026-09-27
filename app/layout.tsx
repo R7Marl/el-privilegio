@@ -16,6 +16,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const structuredData = { '@context': 'https://schema.org', '@type': 'EventPlanningService', name: 'El Privilegio', description, url: siteUrl, telephone: '+541139049957', image: `${siteUrl}/gallery/evento-exterior.jpeg`, areaServed: 'Argentina', sameAs: [] };
+  const structuredData = { '@context': 'https://schema.org', '@type': 'EventPlanningService', name: 'El Privilegio', description, url: siteUrl, telephone: '+5491131872510', image: `${siteUrl}/gallery/evento-exterior.jpeg`, areaServed: 'Argentina', sameAs: [] };
   return <html lang="es-AR"><body>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /></body></html>;
 }
