@@ -1,9 +1,8 @@
-import { eq } from 'drizzle-orm';
+import { asc, eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { getDb } from '../../../../db';
 import { eventTypes, serviceAddons, users } from '../../../../db/schema';
 import { getAdminSession } from '../../../../lib/session';
-import { asc } from 'drizzle-orm';
 
 export const runtime = 'nodejs';
 type EventInput = { id: string; title: string; description: string; pricePerGuest: number };
@@ -18,7 +17,15 @@ async function authorized() {
   const user = await getDb().query.users.findFirst({ where: eq(users.id, session.userId) });
   return Boolean(user?.active && user.role === 'admin');
 }
-function sameOrigin(request: Request) { const origin = request.headers.get('origin'); return !origin || origin === new URL(request.url).origin; }
+function sameOrigin(request: Request) {
+  const origin = request.headers.get('origin');
+  if (!origin) return true;
+  try {
+    const originHost = new URL(origin).host;
+    const publicHost = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? new URL(request.url).host).split(',')[0].trim();
+    return originHost === publicHost;
+  } catch { return false; }
+}
 
 export async function GET() {
   try {
