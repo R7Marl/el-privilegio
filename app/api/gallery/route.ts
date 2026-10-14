@@ -1,8 +1,18 @@
-import { readdir } from 'fs/promises';
-import path from 'path';
+import { list } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 export async function GET() {
-  try { const files = await readdir(path.join(process.cwd(), 'public', 'uploads')); return NextResponse.json({ images: files.filter(file => /\.(jpg|jpeg|png|webp)$/i.test(file)).map(file => ({ src: `/uploads/${file}`, title: 'Evento realizado', category: 'Celebraciones' })) }); } catch { return NextResponse.json({ images: [] }); }
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return NextResponse.json({ images: [] });
+
+  try {
+    const { blobs } = await list({ prefix: 'gallery/' });
+    const images = blobs
+      .filter((blob) => /\.(jpg|jpeg|png|webp)$/i.test(blob.pathname))
+      .map((blob) => ({ src: blob.url, title: 'Evento realizado', category: 'Celebraciones' }));
+    return NextResponse.json({ images });
+  } catch (error) {
+    console.error('No se pudieron obtener las imágenes de Blob.', error);
+    return NextResponse.json({ images: [] });
+  }
 }
